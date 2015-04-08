@@ -1,5 +1,6 @@
 from functools import reduce
 from itertools import permutations as prm
+from negotiator_base import BaseNegotiator
 
 class NaiveNegotiator:
     def __init__(self):
