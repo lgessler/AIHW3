@@ -36,22 +36,23 @@ def fight_all_csvs(negotiator_a, negotiator_b):
         negotiator_a.initialize(a_order, num_iters)
         negotiator_b.initialize(b_order, num_iters)
         # Get the result of the negotiation
-        (result, order, count) = negotiate(num_iters, negotiator_a, negotiator_b, verbose=False)
-        # Assign points to each negotiator. Note that if the negotiation failed, each negotiatior receives a negative penalty
-        # However, it is also possible in a "successful" negotiation for a given negotiator to receive negative points
-        (points_a, points_b) = (negotiator_a.utility(), negotiator_b.utility()) if result else (-len(a_order), -len(b_order))
-        results = (result, points_a, points_b, count)
-        score_a += points_a
-        score_b += points_b
-        # Update each negotiator with the final result, points assigned, and number of iterations taken to reach an agreement
-        negotiator_a.receive_results(results)
-        negotiator_b.receive_results(results)
-        #print("{} negotiation:\n\t{}: {}\n\t{}: {}".format("Successful" if result else "Failed", negotiator_a.__class__.__name__, points_a, negotiator_b.__class__.__name__, points_b))
+        for i in range(5):
+            (result, order, count) = negotiate(num_iters, negotiator_a, negotiator_b, verbose=False)
+            # Assign points to each negotiator. Note that if the negotiation failed, each negotiatior receives a negative penalty
+            # However, it is also possible in a "successful" negotiation for a given negotiator to receive negative points
+            (points_a, points_b) = (negotiator_a.utility(), negotiator_b.utility()) if result else (-len(a_order), -len(b_order))
+            results = (result, points_a, points_b, count)
+            score_a += points_a
+            score_b += points_b
+            # Update each negotiator with the final result, points assigned, and number of iterations taken to reach an agreement
+            negotiator_a.receive_results(results)
+            negotiator_b.receive_results(results)
+            #print("{} negotiation:\n\t{}: {}\n\t{}: {}".format("Successful" if result else "Failed", negotiator_a.__class__.__name__, points_a, negotiator_b.__class__.__name__, points_b))
     print("Final result:\n\t{}: {}\n\t{}: {}".format(negotiator_a.__class__.__name__,score_a, negotiator_b.__class__.__name__,score_b))
     return score_a,score_b
 
 for i in range(100):
-    for a,b in combinations(negotiators, 2):
+    for a,b in permutations(negotiators, 2):
         sa, sb = fight_all_csvs(a,b)
         performance[a] += sa
         performance[b] += sb
