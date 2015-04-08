@@ -18,6 +18,7 @@ class NaiveNegotiator(BaseNegotiator):
     def initialize(self, preferences, iter_limit):
         self.preferences = preferences
         self.iter_limit = iter_limit
+        self.iter = 0
         self.offered_before = []
         self.sp = sorted([(a,self.find_util(a)) for a in prm(self.preferences)],key=lambda x:x[1])
         self.sp = self.sp[::-1]
