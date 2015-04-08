@@ -8,19 +8,16 @@ from test_negotiators import Selfish_Negotiator, Mostly_Selfish_Negotiator
 
 negotiators = [
     NaiveNegotiator(),
-    NaiveNegotiator(),
     Negotiator(),
     Selfish_Negotiator(),
     Selfish_Negotiator(),
-    Selfish_Negotiator(),
-    Selfish_Negotiator(),
-    Mostly_Selfish_Negotiator(),
     Mostly_Selfish_Negotiator(),
     Mostly_Selfish_Negotiator(),
 ]
 
 performance = {x : 0 for x in negotiators}
-csvs = [os.path.join('test_cases',x) for x in os.listdir('test_cases')]
+#csvs = [os.path.join('test_cases',x) for x in os.listdir('test_cases')]
+csvs = [os.path.join('gen_cases',x) for x in os.listdir('gen_cases')]
 
 
 def fight_all_csvs(negotiator_a, negotiator_b):
@@ -52,9 +49,6 @@ def fight_all_csvs(negotiator_a, negotiator_b):
         #print("{} negotiation:\n\t{}: {}\n\t{}: {}".format("Successful" if result else "Failed", negotiator_a.__class__.__name__, points_a, negotiator_b.__class__.__name__, points_b))
     print("Final result:\n\t{}: {}\n\t{}: {}".format(negotiator_a.__class__.__name__,score_a, negotiator_b.__class__.__name__,score_b))
     return score_a,score_b
-
-fight_all_csvs(Negotiator(),Negotiator())
-fight_all_csvs(Negotiator(),Negotiator())
 
 for i in range(100):
     for a,b in combinations(negotiators, 2):
