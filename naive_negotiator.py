@@ -1,7 +1,7 @@
 from functools import reduce
 from itertools import permutations as prm
 
-class NaiveNegotiator:
+class NaiveNegotiator(BaseNegotiator):
     def __init__(self):
         self.preferences = []
         self.offer = []
@@ -37,11 +37,4 @@ class NaiveNegotiator:
         # Store the results of the last series of negotiation (points won, success, etc.)
     def receive_results(self, results):
         pass
-
-    # utility(self : BaseNegotiator) --> Float
-        # Return the utility given by the last offer - Do not modify this method.
-    def utility(self):
-        total = len(self.preferences)
-        return reduce(lambda points, item: points + ((total / (self.offer.index(item) + 1)) - abs(self.offer.index(item) - self.preferences.index(item))), self.offer, 0)
-
 
