@@ -8,8 +8,14 @@ from test_negotiators import Selfish_Negotiator, Mostly_Selfish_Negotiator
 
 negotiators = [
     NaiveNegotiator(),
+    NaiveNegotiator(),
     Negotiator(),
     Selfish_Negotiator(),
+    Selfish_Negotiator(),
+    Selfish_Negotiator(),
+    Selfish_Negotiator(),
+    Mostly_Selfish_Negotiator(),
+    Mostly_Selfish_Negotiator(),
     Mostly_Selfish_Negotiator(),
 ]
 
@@ -28,13 +34,12 @@ def fight_all_csvs(negotiator_a, negotiator_b):
         a_mapping = {item["item_name"] : int(item["negotiator_a"]) for item in mapping}
         a_order = sorted(a_mapping, key=a_mapping.get, reverse=True)
         b_mapping = {item["item_name"] : int(item["negotiator_b"]) for item in mapping}
-        print a_mapping
         b_order = sorted(b_mapping, key=b_mapping.get, reverse=True)
         # Give each negotiator their preferred item ordering
         negotiator_a.initialize(a_order, num_iters)
         negotiator_b.initialize(b_order, num_iters)
         # Get the result of the negotiation
-        (result, order, count) = negotiate(num_iters, negotiator_a, negotiator_b)
+        (result, order, count) = negotiate(num_iters, negotiator_a, negotiator_b, verbose=False)
         # Assign points to each negotiator. Note that if the negotiation failed, each negotiatior receives a negative penalty
         # However, it is also possible in a "successful" negotiation for a given negotiator to receive negative points
         (points_a, points_b) = (negotiator_a.utility(), negotiator_b.utility()) if result else (-len(a_order), -len(b_order))
@@ -44,14 +49,14 @@ def fight_all_csvs(negotiator_a, negotiator_b):
         # Update each negotiator with the final result, points assigned, and number of iterations taken to reach an agreement
         negotiator_a.receive_results(results)
         negotiator_b.receive_results(results)
-        print("{} negotiation:\n\t{}: {}\n\t{}: {}".format("Successful" if result else "Failed", negotiator_a.__class__.__name__, points_a, negotiator_b.__class__.__name__, points_b))
-    print("Final result:\n\tNegotiator A: {}\n\tNegotiator B: {}".format(score_a, score_b))
+        #print("{} negotiation:\n\t{}: {}\n\t{}: {}".format("Successful" if result else "Failed", negotiator_a.__class__.__name__, points_a, negotiator_b.__class__.__name__, points_b))
+    print("Final result:\n\t{}: {}\n\t{}: {}".format(negotiator_a.__class__.__name__,score_a, negotiator_b.__class__.__name__,score_b))
     return score_a,score_b
 
 fight_all_csvs(Negotiator(),Negotiator())
 fight_all_csvs(Negotiator(),Negotiator())
 
-for i in range(1000):
+for i in range(100):
     for a,b in combinations(negotiators, 2):
         sa, sb = fight_all_csvs(a,b)
         performance[a] += sa

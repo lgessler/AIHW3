@@ -25,7 +25,7 @@ def read_scenario(parameterfile_name):
 # negotiate(num_iterations :  Int, negotiator_a : BaseNegotiator, negotiator_b : BaseNegotiator) --> (Boolean, list(String), Int)
     # The main negotiation function, responsible for running a single scenario & coordinating interactions between the two
     # negotiators.
-def negotiate(num_iterations, negotiator_a, negotiator_b):
+def negotiate(num_iterations, negotiator_a, negotiator_b, verbose=True):
     # Get the initial offer from negotiator a - we pass in None to signify that no previous opposing offers have been made
     (offer_a, offer_b) = (negotiator_a.make_offer(None), None)
 
@@ -35,7 +35,8 @@ def negotiate(num_iterations, negotiator_a, negotiator_b):
 
     # Keep trading offers until we reach an agreement or the iteration limit, whichever comes first
     for i in range(num_iterations):
-        print(offer_a, offer_b)
+        if verbose:
+            print(offer_a, offer_b)
         
         # Get from each negotiator the utility it received from the offer it most recently gave 
         utility = (a_scale * negotiator_a.utility(), b_scale * negotiator_b.utility())
