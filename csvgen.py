@@ -2,7 +2,7 @@ from random import shuffle, choice
 import string
 
 NUM_ROUNDS = 10
-LENGTH = 10
+LENGTH = 7
 
 words = open('/usr/share/dict/words','r').read().split('\n')
 words = [filter(lambda x: x in string.printable, s) for s in words if "'" not in s]

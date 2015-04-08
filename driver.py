@@ -17,7 +17,8 @@ performance = {x : 0 for x in negotiators}
 csvs = [os.path.join('test_cases',x) for x in os.listdir('test_cases')]
 
 
-def round_of_ten(negotiator_a, negotiator_b):
+def fight_all_csvs(negotiator_a, negotiator_b):
+    print "Pitting %s and %s..." % (negotiator_a.__class__.__name__,negotiator_b.__class__.__name__)
     score_a = score_b = 0
     for scenario in csvs:
         # Get the scenario parameters
@@ -27,6 +28,7 @@ def round_of_ten(negotiator_a, negotiator_b):
         a_mapping = {item["item_name"] : int(item["negotiator_a"]) for item in mapping}
         a_order = sorted(a_mapping, key=a_mapping.get, reverse=True)
         b_mapping = {item["item_name"] : int(item["negotiator_b"]) for item in mapping}
+        print a_mapping
         b_order = sorted(b_mapping, key=b_mapping.get, reverse=True)
         # Give each negotiator their preferred item ordering
         negotiator_a.initialize(a_order, num_iters)
@@ -42,15 +44,18 @@ def round_of_ten(negotiator_a, negotiator_b):
         # Update each negotiator with the final result, points assigned, and number of iterations taken to reach an agreement
         negotiator_a.receive_results(results)
         negotiator_b.receive_results(results)
-        print("{} negotiation:\n\tNegotiator A: {}\n\tNegotiator B: {}".format("Successful" if result else "Failed", points_a, points_b))
+        print("{} negotiation:\n\t{}: {}\n\t{}: {}".format("Successful" if result else "Failed", negotiator_a.__class__.__name__, points_a, negotiator_b.__class__.__name__, points_b))
     print("Final result:\n\tNegotiator A: {}\n\tNegotiator B: {}".format(score_a, score_b))
     return score_a,score_b
 
+fight_all_csvs(Negotiator(),Negotiator())
+fight_all_csvs(Negotiator(),Negotiator())
 
-for a,b in combinations(negotiators, 2):
-    sa, sb = round_of_ten(a,b)
-    performance[a] += sa
-    performance[b] += sb
+for i in range(1000):
+    for a,b in combinations(negotiators, 2):
+        sa, sb = fight_all_csvs(a,b)
+        performance[a] += sa
+        performance[b] += sb
 
 for neg,score in performance.items():
     print neg.__class__.__name__,score
