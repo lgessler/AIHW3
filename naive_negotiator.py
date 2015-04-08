@@ -2,7 +2,7 @@ from functools import reduce
 from itertools import permutations as prm
 from negotiator_base import BaseNegotiator
 
-class NaiveNegotiator:
+class NaiveNegotiator(BaseNegotiator):
     def __init__(self):
         self.preferences = []
         self.offer = []
@@ -19,9 +19,8 @@ class NaiveNegotiator:
         self.preferences = preferences
         self.iter_limit = iter_limit
         self.offered_before = []
-        self.sp = reversed(sorted([(a,self.find_util(a)) for a in prm(self.preferences)],key=lambda x:x[1]))
-        print "SP"
-        print sp
+        self.sp = sorted([(a,self.find_util(a)) for a in prm(self.preferences)],key=lambda x:x[1])
+        self.sp = self.sp[::-1]
         self.max_util = self.sp[0][1]
         self.min_util = self.thresh * self.max_util
 
@@ -41,12 +40,12 @@ class NaiveNegotiator:
 
         #if last offer
         if self.iter == self.iter_limit:
-            if !self.is_first:
+            if not self.is_first:
                 self.offer = self.sp[0][0]
                 return self.offer
             
             #Final accept
-            else if find_util(offer) >= self.min_util:
+            elif self.find_util(offer) >= self.min_util:
                 self.offer = offer[:]
                 return offer
             #Final decline
@@ -56,7 +55,7 @@ class NaiveNegotiator:
 
         # sorted possibilities
         if offer is None or (self.find_util(offer) < self.sp[self.offer_index][1]):
-            self.offer = self.sp[self.offer_index][1]
+            self.offer = self.sp[self.offer_index][0]
             self.offer_index += 1
             #If offer starts being bad, reset offers
             if self.sp[self.offer_index][1] < self.min_util:
