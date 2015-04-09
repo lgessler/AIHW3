@@ -79,10 +79,17 @@ for i in range(2):
 print "SCORES:"
 for neg,score in performance.items():
     print negotiators.index(neg),neg.__class__.__name__,score
+print 
 
 #Print w/l ratios
-#print "WIN/LOSS RATIOS"
-
+print "WIN/LOSS RATIOS"
+for neg_a in pair_results:
+    print neg_a,negotiators[neg_a].__class__.__name__
+    print "\tWins:",sum([pair_results[neg_a][neg_b]["W"] for neg_b in pair_results[neg_a]])
+    print "\tLosses:",sum([pair_results[neg_a][neg_b]["L"] for neg_b in pair_results[neg_a]])
+    print "\tDraws:",sum([pair_results[neg_a][neg_b]["D"] for neg_b in pair_results[neg_a]])
+    print "\tFailed Negotations:",sum([pair_results[neg_a][neg_b]["F"] for neg_b in pair_results[neg_a]])
+print 
 
 #Print pairing data
 print "VS DATA:"
@@ -91,6 +98,6 @@ for neg_a in pair_results:
     for neg_b in pair_results[neg_a]:
         print "\t",neg_b,negotiators[neg_b].__class__.__name__
         print "\t\tWins:",pair_results[neg_a][neg_b]["W"]
-        print "\t\tLoses:",pair_results[neg_a][neg_b]["L"]
+        print "\t\tLosses:",pair_results[neg_a][neg_b]["L"]
         print "\t\tDraws:",pair_results[neg_a][neg_b]["D"]
         print "\t\tFailed Negotations:",pair_results[neg_a][neg_b]["F"]
