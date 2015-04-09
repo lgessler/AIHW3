@@ -1,5 +1,5 @@
 from negotiator_framework import negotiate,read_scenario
-from itertools import permutations
+from itertools import permutations, combinations
 import os
 
 from naive_negotiator import NaiveNegotiator
@@ -9,6 +9,8 @@ from test_negotiators import Selfish_Negotiator, Mostly_Selfish_Negotiator
 negotiators = [
     NaiveNegotiator(),
     NaiveNegotiator(),
+    Selfish_Negotiator(),
+    Mostly_Selfish_Negotiator()
 ]
 wltf = [[0,0,0,0] for n in negotiators]
 
@@ -16,6 +18,9 @@ performance = {x : 0 for x in negotiators}
 #csvs = [os.path.join('test_cases',x) for x in os.listdir('test_cases')]
 csvs = [os.path.join('gen_cases',x) for x in os.listdir('gen_cases')]
 
+pair_results = { x : {y : {"W":0,"L":0,"D":0,"F":0} for y in range(len(negotiators)) if y != x} for x in range(len(negotiators))}
+#print "PAIRS"
+#print pair_results
 
 def fight_all_csvs(negotiator_a, negotiator_b):
     print "Pitting %s and %s..." % (negotiator_a.__class__.__name__,negotiator_b.__class__.__name__)
@@ -41,11 +46,27 @@ def fight_all_csvs(negotiator_a, negotiator_b):
             results = (result, points_a, points_b, count)
             score_a += points_a
             score_b += points_b
+
+            #Store results for stats
+            if not result:
+                pair_results[negotiators.index(negotiator_a)][negotiators.index(negotiator_b)]["F"] += 1
+                pair_results[negotiators.index(negotiator_b)][negotiators.index(negotiator_a)]["F"] += 1
+            else:
+                if points_a > points_b:
+                    pair_results[negotiators.index(negotiator_a)][negotiators.index(negotiator_b)]["W"] += 1
+                    pair_results[negotiators.index(negotiator_b)][negotiators.index(negotiator_a)]["L"] += 1
+                elif points_a < points_b:
+                    pair_results[negotiators.index(negotiator_a)][negotiators.index(negotiator_b)]["L"] += 1
+                    pair_results[negotiators.index(negotiator_b)][negotiators.index(negotiator_a)]["W"] += 1
+                else:
+                    pair_results[negotiators.index(negotiator_a)][negotiators.index(negotiator_b)]["D"] += 1
+                    pair_results[negotiators.index(negotiator_b)][negotiators.index(negotiator_a)]["D"] += 1
+
             # Update each negotiator with the final result, points assigned, and number of iterations taken to reach an agreement
             negotiator_a.receive_results(results)
             negotiator_b.receive_results(results)
             #print("{} negotiation:\n\t{}: {}\n\t{}: {}".format("Successful" if result else "Failed", negotiator_a.__class__.__name__, points_a, negotiator_b.__class__.__name__, points_b))
-    print("Final result:\n\t{}: {}\n\t{}: {}".format(negotiator_a.__class__.__name__,score_a, negotiator_b.__class__.__name__,score_b))
+    #print("Final result:\n\t{}: {}\n\t{}: {}".format(negotiator_a.__class__.__name__,score_a, negotiator_b.__class__.__name__,score_b))
     return score_a,score_b
 
 for i in range(2):
@@ -54,5 +75,22 @@ for i in range(2):
         performance[a] += sa
         performance[b] += sb
 
+#Print scores of every negotiator
+print "SCORES:"
 for neg,score in performance.items():
-    print neg.__class__.__name__,score
+    print negotiators.index(neg),neg.__class__.__name__,score
+
+#Print w/l ratios
+#print "WIN/LOSS RATIOS"
+
+
+#Print pairing data
+print "VS DATA:"
+for neg_a in pair_results:
+    print neg_a,negotiators[neg_a].__class__.__name__
+    for neg_b in pair_results[neg_a]:
+        print "\t",neg_b,negotiators[neg_b].__class__.__name__
+        print "\t\tWins:",pair_results[neg_a][neg_b]["W"]
+        print "\t\tLoses:",pair_results[neg_a][neg_b]["L"]
+        print "\t\tDraws:",pair_results[neg_a][neg_b]["D"]
+        print "\t\tFailed Negotations:",pair_results[neg_a][neg_b]["F"]
