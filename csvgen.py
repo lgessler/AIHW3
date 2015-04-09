@@ -4,11 +4,11 @@ import os
 import sys
 
 if len(sys.argv) < 2:
-    print "Usage: \t $ python csvgen.py <NUM FILES>"
+    print "Usage: \t $ python csvgen.py <NUM FILES> <NUM ITEMS>"
     sys.exit(1)
 
 NUM_ROUNDS = 10
-LENGTH = 7
+LENGTH = int(sys.argv[2])
 NUM_CSVS = int(sys.argv[1])
 PATH = 'gen_cases'
 

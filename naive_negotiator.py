@@ -15,16 +15,6 @@ class NaiveNegotiator(BaseNegotiator):
         self.min_util = 0.0
         self.offer_index = 0
 
-    def initialize(self, preferences, iter_limit):
-        self.preferences = preferences
-        self.iter_limit = iter_limit
-        self.iter = 0
-        self.offered_before = []
-        self.sp = sorted([(a,self.find_util(a)) for a in prm(self.preferences)],key=lambda x:x[1])
-        self.sp = self.sp[::-1]
-        self.max_util = self.sp[0][1]
-        self.min_util = self.thresh * self.max_util
-
     def find_util(self, order):
         tmp = self.offer[:]
         self.offer = order[:]
@@ -32,10 +22,43 @@ class NaiveNegotiator(BaseNegotiator):
         self.offer = tmp
         return i
 
+    def find_possibilities(self):
+        #return sorted([(a,self.find_util(a)) for a in prm(self.preferences)],key=lambda x:x[1])
+        L = [self.preferences[:]]
+        outlist = []
+        while True:
+            tmp = L.pop(0)
+            tmputil = self.find_util(tmp)
+            if tmputil < self.thresh * self.find_util(self.preferences):
+                break
+            outlist.append((tmp,tmputil))
+
+            for i in range(len(tmp)):
+                for j in range(len(tmp)):
+                    if i != j:
+                        swapt = tmp[:]
+                        swapt[i], swapt[j] = swapt[j], swapt[i]
+                        if swapt not in L:
+                            L.append(swapt)
+
+        return sorted(outlist,key=lambda x: x[1])
+
+    def initialize(self, preferences, iter_limit):
+        self.preferences = preferences
+        self.iter_limit = iter_limit
+        self.iter = 0
+        self.offered_before = []
+        self.sp = self.find_possibilities() 
+        self.sp = self.sp[::-1]
+        self.max_util = self.sp[0][1]
+        self.min_util = self.thresh * self.max_util
+
     def make_offer(self, offer):
-        #check if first in first iteration
-        if self.iter == 0 and offer == None:
+    #check if first in first iteration
+        # assume no agent ever gives an offer of None
+        if offer == None:
             self.is_first = True
+            self.iter = 0
         else:
             self.iter += 1
 
@@ -57,7 +80,7 @@ class NaiveNegotiator(BaseNegotiator):
         # sorted possibilities
         if offer is None or (self.find_util(offer) < self.sp[self.offer_index][1]):
             self.offer = self.sp[self.offer_index][0]
-            self.offer_index += 1
+            self.offer_index = (self.offer_index + 1) % len(self.sp)
             #If offer starts being bad, reset offers
             if self.sp[self.offer_index][1] < self.min_util:
                 self.offer_index = 0

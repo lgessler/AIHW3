@@ -1,5 +1,5 @@
 from negotiator_framework import negotiate,read_scenario
-from itertools import combinations
+from itertools import permutations
 import os
 
 from naive_negotiator import NaiveNegotiator
@@ -8,12 +8,9 @@ from test_negotiators import Selfish_Negotiator, Mostly_Selfish_Negotiator
 
 negotiators = [
     NaiveNegotiator(),
-    Negotiator(),
-    Selfish_Negotiator(),
-    Selfish_Negotiator(),
-    Mostly_Selfish_Negotiator(),
-    Mostly_Selfish_Negotiator(),
+    NaiveNegotiator(),
 ]
+wltf = [[0,0,0,0] for n in negotiators]
 
 performance = {x : 0 for x in negotiators}
 #csvs = [os.path.join('test_cases',x) for x in os.listdir('test_cases')]
@@ -35,8 +32,8 @@ def fight_all_csvs(negotiator_a, negotiator_b):
         # Give each negotiator their preferred item ordering
         negotiator_a.initialize(a_order, num_iters)
         negotiator_b.initialize(b_order, num_iters)
-        # Get the result of the negotiation
-        for i in range(5):
+        for j in range(5):
+            # Get the result of the negotiation
             (result, order, count) = negotiate(num_iters, negotiator_a, negotiator_b, verbose=False)
             # Assign points to each negotiator. Note that if the negotiation failed, each negotiatior receives a negative penalty
             # However, it is also possible in a "successful" negotiation for a given negotiator to receive negative points
@@ -51,7 +48,7 @@ def fight_all_csvs(negotiator_a, negotiator_b):
     print("Final result:\n\t{}: {}\n\t{}: {}".format(negotiator_a.__class__.__name__,score_a, negotiator_b.__class__.__name__,score_b))
     return score_a,score_b
 
-for i in range(100):
+for i in range(2):
     for a,b in permutations(negotiators, 2):
         sa, sb = fight_all_csvs(a,b)
         performance[a] += sa
