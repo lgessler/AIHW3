@@ -47,7 +47,6 @@ class NaiveNegotiator(BaseNegotiator):
         self.preferences = preferences
         self.iter_limit = iter_limit
         self.iter = 0
-        self.offered_before = []
         self.sp = self.find_possibilities() 
         self.sp = self.sp[::-1]
         self.max_util = self.sp[0][1]
@@ -58,12 +57,12 @@ class NaiveNegotiator(BaseNegotiator):
         # assume no agent ever gives an offer of None
         if offer == None:
             self.is_first = True
-            self.iter = 0
         else:
             self.iter += 1
 
         #if last offer
         if self.iter == self.iter_limit:
+            self.iter = 0
             if not self.is_first:
                 self.offer = self.sp[0][0]
                 return self.offer
@@ -84,9 +83,6 @@ class NaiveNegotiator(BaseNegotiator):
             #If offer starts being bad, reset offers
             if self.sp[self.offer_index][1] < self.min_util:
                 self.offer_index = 0
-            #Add to offer list if not already there
-            if self.offer not in self.offered_before:
-                self.offered_before.append(self.offer)
             return self.offer
 
         self.offer = offer
