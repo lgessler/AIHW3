@@ -5,14 +5,15 @@ import os
 from naive_negotiator import NaiveNegotiator
 from negotiator import Negotiator
 from test_negotiators import Selfish_Negotiator, Mostly_Selfish_Negotiator
-from naive_acommodating_negotiator import NaiveNegotiator as NN
+from accommodating_negotiator import AccommodatingNegotiator
 
 negotiators = [
     NaiveNegotiator(),
     NaiveNegotiator(),
     Selfish_Negotiator(),
     Mostly_Selfish_Negotiator(),
-    NN(),
+    AccommodatingNegotiator(),
+    AccommodatingNegotiator(),
 ]
 wltf = [[0,0,0,0] for n in negotiators]
 
