@@ -75,12 +75,11 @@ class NaiveNegotiator(BaseNegotiator):
             self.is_first = True
         else:
             self.iter += 1
-
-        #Save opponent offer
-        opp_util = self.find_util(offer)
-        if opp_util >= self.last_offer_thresh * self.max_util and opp_util > self.highest_opp_offer_util:
-            self.highest_opp_offer = offer
-            self.highest_opp_offer_util = opp_util
+            #Save opponent offer
+            opp_util = self.find_util(offer)
+            if opp_util >= self.last_offer_thresh * self.max_util and opp_util > self.highest_opp_offer_util:
+                self.highest_opp_offer = offer
+                self.highest_opp_offer_util = opp_util
 
         #if last offer
         if self.iter == self.iter_limit:
