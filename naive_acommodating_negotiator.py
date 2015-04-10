@@ -10,18 +10,27 @@ class NaiveNegotiator(BaseNegotiator):
 
         self.is_first = False
         self.iter = 0
-        self.thresh = 0.6
         self.max_util = 0.0
-        self.min_util = 0.0
         self.offer_index = 0
+        self.offer_step_size = 1
+
+        #Four thresholds:
+        self.offer_thresh = 0.6
+        self.accept_thresh = 0.5
+        self.last_offer_thresh = 0.4
+        self.highest_opp_offer = [] #offers the opponents give that are above last_offer_thresh but below accept_thresh
+        self.highest_opp_offer_util = 0.0
+        self.last_accept_thresh = 0.4
 
         self.opp_preference = []
         self.opp_max_util = -1.0
         self.opp_offers = []
-        self.opp_confirmed_util = []
-        self.opp_is_greedy = False
-        self.opp_offering_pref = False
-        self.opp_greed_count = 0
+        #self.opp_confirmed_util = []
+        
+        #for checking greedy - FIGURE OUT?
+        #self.opp_is_greedy = False
+        #self.opp_offering_pref = False
+        #self.opp_greed_count = 0
 
     def find_util(self, order):
         tmp = self.offer[:]
@@ -37,7 +46,7 @@ class NaiveNegotiator(BaseNegotiator):
         while True:
             tmp = L.pop(0)
             tmputil = self.find_util(tmp)
-            if tmputil < self.thresh * self.find_util(self.preferences):
+            if tmputil < self.offer_thresh * self.find_util(self.preferences):
                 break
             outlist.append((tmp,tmputil))
 
@@ -58,7 +67,6 @@ class NaiveNegotiator(BaseNegotiator):
         self.sp = self.find_possibilities() 
         self.sp = self.sp[::-1]
         self.max_util = self.sp[0][1]
-        self.min_util = self.thresh * self.max_util
 
     def make_offer(self, offer):
     #check if first in first iteration
@@ -68,15 +76,27 @@ class NaiveNegotiator(BaseNegotiator):
         else:
             self.iter += 1
 
+        #Save opponent offer
+        opp_util = self.find_util(offer)
+        if opp_util >= self.last_offer_thresh * self.max_util && opp_util > self.highest_opp_offer_util:
+            self.highest_opp_offer = offer
+            self.highest_opp_offer_util = opp_util
+
         #if last offer
         if self.iter == self.iter_limit:
             #Give final offer
             if not self.is_first:
-                self.offer = self.sp[0][0]
-                return self.offer
+                #If opponent hasn't given reasonable offer, spit back preferences
+                if self.highest_opp_offer == []:
+                    self.offer = self.sp[0][0]
+                    return self.offer
+                #If opponent has given us reasonable offer prior, offer back
+                else:
+                    self.offer = self.highest_opp_offer[:]
+                    return self.offer
             
             #Final accept
-            elif self.find_util(offer) >= self.min_util:
+            elif self.find_util(offer) >= self.last_accept_thresh * self.max_util:
                 self.offer = offer[:]
                 return offer
             #Final decline
@@ -87,9 +107,8 @@ class NaiveNegotiator(BaseNegotiator):
         # sorted possibilities
         if offer is None or (self.find_util(offer) < self.sp[self.offer_index][1]):
             self.offer = self.sp[self.offer_index][0]
-            self.offer_index = (self.offer_index + 1) % len(self.sp)
-            #If offer starts being bad, reset offers
-            if self.sp[self.offer_index][1] < self.min_util:
+            self.offer_index = (self.offer_index + self.offer_step_size) % len(self.sp)           
+            if self.sp[self.offer_index][1] < self.offer_thresh * self.max_util:
                 self.offer_index = 0
             return self.offer
 
@@ -101,12 +120,11 @@ class NaiveNegotiator(BaseNegotiator):
             self.opp_max_util = utility
             self.opp_offering_pref = True
 
-
-
     # receive_results(self : BaseNegotiator, results : (Boolean, Float, Float, Int))
-        # Store the results of the last series of negotiation (points won, success, etc.)
+    # Store the results of the last series of negotiation (points won, success, etc.)
     def receive_results(self, results):
         self.iter = 0
+        self.offer_index = 0
         
         #If negotiation SUCCEEDED
         if results[0]:
@@ -117,31 +135,26 @@ class NaiveNegotiator(BaseNegotiator):
 
                 #If I LOST
                 if my_score < opp_score:
-                    #If negotiation dragged to last round = 
+                    #If negotiation dragged to last round = accepted last offer
                     if results[3] == self.iter_limit:
-                        return
+                        if my_score < 0.8 * opp_score:
+                            self.last_accept_thresh = float(my_score) / float(self.max_util) + 0.05
+                        else:
+                            self.last_accept_thresh = float(my_score) / float(self.max_util)
                     #If negotiation aggreed midway
                     else:
-                        return
-                #If I WON
-                elif my_score > opp_score:
-                    #If negotiation dragged to last round
+                        if my_score < 0.8 * opp_score:
+                            self.accept_thresh = float(my_score) / float(self.max_util) + 0.05
+                        else:
+                            self.accept_thresh = float(my_score) / float(self.max_util)
+                #If I WON or DREW
+                elif my_score >= opp_score:
+                    #If negotiation dragged to last round = accepted last offer
                     if results[3] == self.iter_limit:
-                        if temp > self.min_util:
-                            self.min_util = temp
+                        self.last_accept_thresh = float(my_score) / float(self.max_util)
                     #If negotiation aggreed midway
                     else:
-                        continue
-                #If we DREW
-                else:
-                    #If negotiation dragged to last round
-                    if results[3] == self.iter_limit:
-                        if temp > self.min_util:
-                            self.min_util = temp
-                    #If negotiation aggreed midway
-                    else:
-                        if temp > self.min_util:
-                            self.min_util = temp
+                        self.accept_thresh = float(my_score) / float(self.max_util)
             #If I went SECOND
             else:
                 my_score = results[2]
@@ -149,34 +162,27 @@ class NaiveNegotiator(BaseNegotiator):
 
                 #If I LOST
                 if my_score < opp_score:
-                    #If negotiation dragged to last round
+                    #If negotiation dragged to last round = made the last offer
                     if results[3] == self.iter_limit:
-                        if temp > self.min_util:
-                            self.min_util = temp
+                        if my_score < 0.8 * opp_score:
+                            self.last_offer_thresh = float(my_score) / float(self.max_util) + 0.05
+                        else:
+                            self.last_offer_thresh = float(my_score) / float(self.max_util)
                     #If negotiation aggreed midway
                     else:
-                        continue
-                #If I WON
-                elif my_score > opp_score:
-                    #If negotiation dragged to last round (Opponent accepted last offer)
+                        if my_score < 0.8 * opp_score:
+                            self.offer_thresh = float(my_score) / float(self.max_util) + 0.05
+                        else:
+                            self.offer_thresh = float(my_score) / float(self.max_util)
+                #If I WON or DREW
+                elif my_score >= opp_score:
+                    #If negotiation dragged to last round = accepted last offer
                     if results[3] == self.iter_limit:
-                        if temp > self.min_util:
-                            self.min_util = temp
+                        self.last_offer_thresh = float(my_score) / float(self.max_util)
                     #If negotiation aggreed midway
                     else:
-                        continue
-                #If we DREW
-                else:
-                    #If negotiation dragged to last round
-                    if results[3] == self.iter_limit:
-                        if temp > self.min_util:
-                            self.min_util = temp
-                    #If negotiation aggreed midway
-                    else:
-                        if temp > self.min_util:
-                            self.min_util = temp
+                        self.offer_thresh = float(my_score) / float(self.max_util)
             
         #If negotiation FAILED
         else:
-            #Do nothing yet
-            return
+            self.offer_step_size += 1
