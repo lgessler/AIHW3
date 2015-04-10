@@ -78,7 +78,7 @@ class NaiveNegotiator(BaseNegotiator):
 
         #Save opponent offer
         opp_util = self.find_util(offer)
-        if opp_util >= self.last_offer_thresh * self.max_util && opp_util > self.highest_opp_offer_util:
+        if opp_util >= self.last_offer_thresh * self.max_util and opp_util > self.highest_opp_offer_util:
             self.highest_opp_offer = offer
             self.highest_opp_offer_util = opp_util
 
