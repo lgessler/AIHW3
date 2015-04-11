@@ -4,13 +4,13 @@ import os
 import sys
 
 if len(sys.argv) < 2:
-    print "Usage: \t $ python csvgen.py <NUM FILES> <NUM ITEMS>"
+    print("Usage: \t $ python csvgen.py <NUM FILES> <NUM ITEMS>")
     sys.exit(1)
 
 NUM_ROUNDS = 10
 LENGTH = int(sys.argv[2])
 NUM_CSVS = int(sys.argv[1])
-PATH = 'gen_cases'
+PATH = '%s-items' % LENGTH
 
 # clean previous cases
 for i in os.listdir(PATH):
@@ -27,7 +27,7 @@ for i in range(NUM_CSVS):
     shuffle(order1)
     shuffle(order2)
 
-    with open('gen_cases/%s_%s_%s.csv'%(choice(words),LENGTH,choice(words)),'w') as f:
+    with open('%s/%s_%s_%s.csv'%(PATH,choice(words),LENGTH,choice(words)),'w') as f:
         f.write(str(NUM_ROUNDS) + '\n')
         for i in range(LENGTH):
             f.write(', '.join([words[i], order1[i], order2[i]]) + '\n')

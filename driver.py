@@ -26,7 +26,7 @@ pair_results = { x : {y : {"W":0,"L":0,"D":0,"F":0} for y in range(len(negotiato
 #print pair_results
 
 def fight_all_csvs(negotiator_a, negotiator_b):
-    print "Pitting %s and %s..." % (negotiator_a.__class__.__name__,negotiator_b.__class__.__name__)
+    print("Pitting %s and %s..." % (negotiator_a.__class__.__name__,negotiator_b.__class__.__name__))
     score_a = score_b = 0
     for scenario in csvs:
         # Get the scenario parameters
@@ -79,28 +79,28 @@ for i in range(2):
         performance[b] += sb
 
 #Print scores of every negotiator
-print "SCORES:"
+print("SCORES:")
 for neg,score in performance.items():
-    print negotiators.index(neg),neg.__class__.__name__,score
-print 
+    print(negotiators.index(neg),neg.__class__.__name__,score)
+print()
 
 #Print w/l ratios
-print "WIN/LOSS RATIOS"
+print("WIN/LOSS RATIOS")
 for neg_a in pair_results:
-    print neg_a,negotiators[neg_a].__class__.__name__
-    print "\tWins:",sum([pair_results[neg_a][neg_b]["W"] for neg_b in pair_results[neg_a]])
-    print "\tLosses:",sum([pair_results[neg_a][neg_b]["L"] for neg_b in pair_results[neg_a]])
-    print "\tDraws:",sum([pair_results[neg_a][neg_b]["D"] for neg_b in pair_results[neg_a]])
-    print "\tFailed Negotations:",sum([pair_results[neg_a][neg_b]["F"] for neg_b in pair_results[neg_a]])
-print 
+    print(neg_a,negotiators[neg_a].__class__.__name__)
+    print("\tWins:",sum([pair_results[neg_a][neg_b]["W"] for neg_b in pair_results[neg_a]]))
+    print("\tLosses:",sum([pair_results[neg_a][neg_b]["L"] for neg_b in pair_results[neg_a]]))
+    print("\tDraws:",sum([pair_results[neg_a][neg_b]["D"] for neg_b in pair_results[neg_a]]))
+    print("\tFailed Negotations:",sum([pair_results[neg_a][neg_b]["F"] for neg_b in pair_results[neg_a]]))
+print() 
 
 #Print pairing data
-print "VS DATA:"
+print("VS DATA:")
 for neg_a in pair_results:
-    print neg_a,negotiators[neg_a].__class__.__name__
+    print(neg_a,negotiators[neg_a].__class__.__name__)
     for neg_b in pair_results[neg_a]:
-        print "\t",neg_b,negotiators[neg_b].__class__.__name__
-        print "\t\tWins:",pair_results[neg_a][neg_b]["W"]
-        print "\t\tLosses:",pair_results[neg_a][neg_b]["L"]
-        print "\t\tDraws:",pair_results[neg_a][neg_b]["D"]
-        print "\t\tFailed Negotations:",pair_results[neg_a][neg_b]["F"]
+        print("\t",neg_b,negotiators[neg_b].__class__.__name__)
+        print("\t\tWins:",pair_results[neg_a][neg_b]["W"])
+        print("\t\tLosses:",pair_results[neg_a][neg_b]["L"])
+        print("\t\tDraws:",pair_results[neg_a][neg_b]["D"])
+        print("\t\tFailed Negotations:",pair_results[neg_a][neg_b]["F"])
