@@ -17,7 +17,7 @@ for i in os.listdir(PATH):
     os.remove(os.path.join(PATH,i))
 
 # write new ones
-words = open('/usr/share/dict/words','r').read().split('\n')
+words = open('words','r').read().split('\n')
 words = [filter(lambda x: x in string.printable, s).lower() for s in words if "'" not in s]
 words = [choice(words) for i in range(LENGTH)]
 
