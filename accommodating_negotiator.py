@@ -16,9 +16,9 @@ class AccommodatingNegotiator(BaseNegotiator):
 
         #Four thresholds:
         self.offer_thresh = 0.6
-        self.accept_thresh = 0.5
+        self.accept_thresh = 0.4
         self.last_offer_thresh = 0.3
-        self.last_accept_thresh = 0.3
+        self.last_accept_thresh = 0.2
         self.highest_opp_offer = [] #offers the opponents give that are above last_offer_thresh but below accept_thresh
         self.highest_opp_offer_util = 0.0
 
@@ -185,3 +185,5 @@ class AccommodatingNegotiator(BaseNegotiator):
         #If negotiation FAILED
         else:
             self.offer_step_size += 1
+            self.last_accept_thresh -= 0.05
+            self.accept_thresh -= 0.05

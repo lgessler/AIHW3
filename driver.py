@@ -3,23 +3,31 @@ from itertools import permutations, combinations
 import os
 
 from naive_negotiator import NaiveNegotiator
-from negotiator import Negotiator
+#from negotiator import Negotiator
 from test_negotiators import Selfish_Negotiator, Mostly_Selfish_Negotiator
 from accommodating_negotiator import AccommodatingNegotiator
+from aggressive_negotiator3 import A3Negotiator
+from MinLoss_Negotiator import MinLoss_Negotiator
 
 negotiators = [
     NaiveNegotiator(),
-    NaiveNegotiator(),
+    #NaiveNegotiator(),
     Selfish_Negotiator(),
     Mostly_Selfish_Negotiator(),
+    #AccommodatingNegotiator(),
     AccommodatingNegotiator(),
-    AccommodatingNegotiator(),
+    #A3Negotiator(),
+    A3Negotiator(),
+    #MinLoss_Negotiator(),
+    MinLoss_Negotiator()
+
 ]
 wltf = [[0,0,0,0] for n in negotiators]
 
 performance = {x : 0 for x in negotiators}
 #csvs = [os.path.join('test_cases',x) for x in os.listdir('test_cases')]
-csvs = [os.path.join('gen_cases',x) for x in os.listdir('gen_cases')]
+#csvs = [os.path.join('gen_cases',x) for x in os.listdir('gen_cases')]
+csvs = [os.path.join('5-items',x) for x in os.listdir('5-items')]
 
 pair_results = { x : {y : {"W":0,"L":0,"D":0,"F":0} for y in range(len(negotiators)) if y != x} for x in range(len(negotiators))}
 #print "PAIRS"
@@ -42,7 +50,7 @@ def fight_all_csvs(negotiator_a, negotiator_b):
         negotiator_b.initialize(b_order, num_iters)
         for j in range(5):
             # Get the result of the negotiation
-            (result, order, count) = negotiate(num_iters, negotiator_a, negotiator_b, verbose=False)
+            (result, order, count) = negotiate(num_iters, negotiator_a, negotiator_b)
             # Assign points to each negotiator. Note that if the negotiation failed, each negotiatior receives a negative penalty
             # However, it is also possible in a "successful" negotiation for a given negotiator to receive negative points
             (points_a, points_b) = (negotiator_a.utility(), negotiator_b.utility()) if result else (-len(a_order), -len(b_order))
