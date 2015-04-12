@@ -5,26 +5,30 @@ import sys
 
 from naive_negotiator import NaiveNegotiator
 #from negotiator import Negotiator
-from test_negotiators import Selfish_Negotiator, Mostly_Selfish_Negotiator
 from accommodating_negotiator import AccommodatingNegotiator
-from aggressive_negotiator3 import A3Negotiator
+from test_negotiators import Selfish_Negotiator, Mostly_Selfish_Negotiator, LenientNegotiator, CavingNegotiator, RandomWithThresholdNegotiator
+from accommodating_negotiator import AccommodatingNegotiator
 from MinLoss_Negotiator import MinLoss_Negotiator
+
 
 negotiators = [
     NaiveNegotiator(),
     NaiveNegotiator(),
     Selfish_Negotiator(),
-	Selfish_Negotiator(),
+    Selfish_Negotiator(),
     Mostly_Selfish_Negotiator(),
-	Mostly_Selfish_Negotiator(),
+    Mostly_Selfish_Negotiator(),
+    LenientNegotiator(),
+    LenientNegotiator(),
+    CavingNegotiator(),
+    CavingNegotiator(),
+    RandomWithThresholdNegotiator(),
+    RandomWithThresholdNegotiator(),
     AccommodatingNegotiator(),
     AccommodatingNegotiator(),
-    A3Negotiator(),
-    A3Negotiator(),
-    MinLoss_Negotiator(),
-    MinLoss_Negotiator()
-
 ]
+
+
 wltf = [[0,0,0,0] for n in negotiators]
 
 performance = {x : 0 for x in negotiators}

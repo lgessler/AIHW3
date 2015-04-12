@@ -202,5 +202,5 @@ class AccommodatingNegotiator(BaseNegotiator):
         #If negotiation FAILED
         else:
             self.offer_step_size += 1
-            if self.last_accept_thresh > 0.1:
-                self.last_accept_thresh -= 0.05
+            #if self.last_accept_thresh > 0.0:
+            #    self.last_accept_thresh -= 0.05
