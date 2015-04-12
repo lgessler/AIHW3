@@ -11,14 +11,16 @@ from MinLoss_Negotiator import MinLoss_Negotiator
 
 negotiators = [
     NaiveNegotiator(),
-    #NaiveNegotiator(),
+    NaiveNegotiator(),
     Selfish_Negotiator(),
+	Selfish_Negotiator(),
     Mostly_Selfish_Negotiator(),
-    #AccommodatingNegotiator(),
+	Mostly_Selfish_Negotiator(),
     AccommodatingNegotiator(),
-    #A3Negotiator(),
+    AccommodatingNegotiator(),
     A3Negotiator(),
-    #MinLoss_Negotiator(),
+    A3Negotiator(),
+    MinLoss_Negotiator(),
     MinLoss_Negotiator()
 
 ]
@@ -28,6 +30,8 @@ performance = {x : 0 for x in negotiators}
 #csvs = [os.path.join('test_cases',x) for x in os.listdir('test_cases')]
 #csvs = [os.path.join('gen_cases',x) for x in os.listdir('gen_cases')]
 csvs = [os.path.join('5-items',x) for x in os.listdir('5-items')]
+#csvs = [os.path.join('7-items',x) for x in os.listdir('7-items')]
+#csvs = [os.path.join('10-items',x) for x in os.listdir('10-items')]
 
 pair_results = { x : {y : {"W":0,"L":0,"D":0,"F":0} for y in range(len(negotiators)) if y != x} for x in range(len(negotiators))}
 #print "PAIRS"
