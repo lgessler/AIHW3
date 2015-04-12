@@ -1,6 +1,7 @@
 from negotiator_framework import negotiate,read_scenario
 from itertools import permutations, combinations
 import os
+import sys
 
 from naive_negotiator import NaiveNegotiator
 #from negotiator import Negotiator
@@ -29,9 +30,14 @@ wltf = [[0,0,0,0] for n in negotiators]
 performance = {x : 0 for x in negotiators}
 #csvs = [os.path.join('test_cases',x) for x in os.listdir('test_cases')]
 #csvs = [os.path.join('gen_cases',x) for x in os.listdir('gen_cases')]
-csvs = [os.path.join('5-items',x) for x in os.listdir('5-items')]
-#csvs = [os.path.join('7-items',x) for x in os.listdir('7-items')]
-#csvs = [os.path.join('10-items',x) for x in os.listdir('10-items')]
+if len(sys.argv) != 2:
+    print("Usage: $ python3 driver.py {5,7,10}")
+    sys.exit(-42)
+if sys.argv[1] not in ['5','7','10']:
+    print("ERROR: enter a valid item number.")
+    sys.exit(-42)
+PATH = sys.argv[1] + '-items'
+csvs = [os.path.join(PATH,x) for x in os.listdir(PATH)]
 
 pair_results = { x : {y : {"W":0,"L":0,"D":0,"F":0} for y in range(len(negotiators)) if y != x} for x in range(len(negotiators))}
 #print "PAIRS"
