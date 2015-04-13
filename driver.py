@@ -96,6 +96,8 @@ def fight_all_csvs(negotiator_a, negotiator_b):
 
 for i in range(2):
     for a,b in permutations(negotiators, 2):
+        a.__init__()
+        b.__init__()
         sa, sb = fight_all_csvs(a,b)
         performance[a] += sa
         performance[b] += sb
