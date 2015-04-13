@@ -266,9 +266,9 @@ class RandomNegotiator(BaseNegotiator):
 
 
 class RandomWithThresholdNegotiator(BaseNegotiator):
-    self.threshold = 0.5
-    self.is_first = False
-    self.iter = 0
+    threshold = 0.5
+    is_first = False
+    iter = 0
 
     def calc_utility(self,offer):
         temp = self.offer
