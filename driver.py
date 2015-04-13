@@ -12,11 +12,7 @@ from MinLoss_Negotiator import MinLoss_Negotiator
 
 
 negotiators = [
-    NaiveNegotiator(),
-    Selfish_Negotiator(),
-    Mostly_Selfish_Negotiator(),
-    LenientNegotiator(),
-    CavingNegotiator(),
+    MinLoss_Negotiator(),
     RandomWithThresholdNegotiator(),
     AccommodatingNegotiator(),
 ]
@@ -28,9 +24,9 @@ performance = {x : 0 for x in negotiators}
 #csvs = [os.path.join('test_cases',x) for x in os.listdir('test_cases')]
 #csvs = [os.path.join('gen_cases',x) for x in os.listdir('gen_cases')]
 if len(sys.argv) != 2:
-    print("Usage: $ python3 driver.py {5,7,10}")
+    print("Usage: $ python3 driver.py {5,7,10,20}")
     sys.exit(-42)
-if sys.argv[1] not in ['5','7','10']:
+if sys.argv[1] not in ['5','7','10','20']:
     print("ERROR: enter a valid item number.")
     sys.exit(-42)
 PATH = sys.argv[1] + '-items'
@@ -55,7 +51,8 @@ def fight_all_csvs(negotiator_a, negotiator_b):
         # Give each negotiator their preferred item ordering
         negotiator_a.initialize(a_order, num_iters)
         negotiator_b.initialize(b_order, num_iters)
-        for j in range(5):
+        for j in range(10):
+            negotiator_a, negotiator_b = negotiator_b, negotiator_a
             # Get the result of the negotiation
             (result, order, count) = negotiate(num_iters, negotiator_a, negotiator_b)
             # Assign points to each negotiator. Note that if the negotiation failed, each negotiatior receives a negative penalty
@@ -79,7 +76,7 @@ def fight_all_csvs(negotiator_a, negotiator_b):
                 else:
                     pair_results[negotiators.index(negotiator_a)][negotiators.index(negotiator_b)]["D"] += 1
                     pair_results[negotiators.index(negotiator_b)][negotiators.index(negotiator_a)]["D"] += 1
-
+        
             # Update each negotiator with the final result, points assigned, and number of iterations taken to reach an agreement
             negotiator_a.receive_results(results)
             negotiator_b.receive_results(results)
@@ -88,7 +85,7 @@ def fight_all_csvs(negotiator_a, negotiator_b):
     return score_a,score_b
 
 for i in range(2):
-    for a,b in permutations(negotiators, 2):
+    for a,b in combinations(negotiators, 2):
         a.__init__()
         b.__init__()
         sa, sb = fight_all_csvs(a,b)
