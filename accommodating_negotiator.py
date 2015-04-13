@@ -155,13 +155,22 @@ class AccommodatingNegotiator(BaseNegotiator):
                 elif my_score >= opp_score:
                     #If negotiation dragged to last round = accepted last offer
                     if results[3] == self.iter_limit:
-                        self.last_accept_thresh = float(my_score) / float(self.max_util)
+                        if my_score < 1.2 * opp_score:
+                            self.last_accept_thresh = float(my_score) / float(self.max_util) + 0.05
+                        else:
+                            self.last_accept_thresh = float(my_score) / float(self.max_util)
                     #If negotiation aggreed midway and we accepted
                     elif self.accepted_midway:
-                        self.accept_thresh = float(my_score) / float(self.max_util)
+                        if my_score < 1.2 * opp_score:
+                            self.accept_thresh = float(my_score) / float(self.max_util) + 0.05
+                        else:
+                            self.accept_thresh = float(my_score) / float(self.max_util)
                     #If negotiation aggreed midway and opponent accepted
                     else:
-                        self.offer_thresh = float(my_score) / float(self.max_util)
+                        if my_score < 1.2 * opp_score:
+                            self.offer_thresh = float(my_score) / float(self.max_util) + 0.05
+                        else:
+                            self.offer_thresh = float(my_score) / float(self.max_util)
             #If I went SECOND
             else:
                 my_score = results[2]
@@ -191,13 +200,22 @@ class AccommodatingNegotiator(BaseNegotiator):
                 elif my_score >= opp_score:
                     #If negotiation dragged to last round = accepted last offer
                     if results[3] == self.iter_limit:
-                        self.last_offer_thresh = float(my_score) / float(self.max_util)
+                        if my_score < 1.2 * opp_score:
+                            self.last_offer_thresh = float(my_score) / float(self.max_util) + 0.05
+                        else:
+                            self.last_offer_thresh = float(my_score) / float(self.max_util)
                     #If negotiation aggreed midway and we accepted
                     elif self.accepted_midway:
-                        self.accept_thresh = float(my_score) / float(self.max_util)
+                        if my_score < 1.2 * opp_score:
+                            self.accept_thresh = float(my_score) / float(self.max_util) + 0.05
+                        else:
+                            self.accept_thresh = float(my_score) / float(self.max_util)
                     #If negotiation aggreed midway and opponent accepted
                     else:
-                        self.offer_thresh = float(my_score) / float(self.max_util)
+                        if my_score < 1.2 * opp_score:
+                            self.offer_thresh = float(my_score) / float(self.max_util) + 0.05
+                        else:
+                            self.offer_thresh = float(my_score) / float(self.max_util)
             
         #If negotiation FAILED
         else:
