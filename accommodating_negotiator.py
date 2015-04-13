@@ -82,12 +82,17 @@ class AccommodatingNegotiator(BaseNegotiator):
                 self.highest_opp_offer = offer
                 self.highest_opp_offer_util = opp_util
 
+        #If opponent caves and you make last offer, only demand 
+        if self.caving and not self.is_first:
+            self.offer = self.sp[0][0]
+            return self.offer
+
         #if last offer
         if self.iter == self.iter_limit:
             #Give final offer
             if not self.is_first:
                 #If opponent hasn't given reasonable offer, spit back preferences
-                if self.highest_opp_offer == [] or self.caving:
+                if self.highest_opp_offer == []:
                     self.offer = self.sp[0][0]
                     return self.offer
                 #If opponent has given us reasonable offer prior, offer back
@@ -176,9 +181,8 @@ class AccommodatingNegotiator(BaseNegotiator):
                 if my_score < opp_score:
                     #If negotiation dragged to last round = made the last offer
                     if results[3] == self.iter_limit:
-                        self.cavingCount += 1
-                        if self.cavingCount > 2:
-                            self.caving = True
+                        self.cavingCount = 0
+                        self.caving = False
                         if my_score < 0.8 * opp_score:
                             self.last_offer_thresh = float(my_score) / float(self.max_util) + 0.05
                         else:
@@ -197,8 +201,11 @@ class AccommodatingNegotiator(BaseNegotiator):
                             self.offer_thresh = float(my_score) / float(self.max_util)
                 #If I WON or DREW
                 elif my_score >= opp_score:
-                    #If negotiation dragged to last round = accepted last offer
+                    #If negotiation dragged to last round = opponent accepted last offer
                     if results[3] == self.iter_limit:
+                        self.cavingCount += 1
+                        if self.cavingCount > 1:
+                            self.caving = True
                         self.last_offer_thresh = float(my_score) / float(self.max_util)
                     #If negotiation aggreed midway and we accepted
                     elif self.accepted_midway:
