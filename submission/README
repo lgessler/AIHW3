@@ -6,10 +6,10 @@ FILE MANIFEST
 =============
 
 Competition File:
-    mqn2at.py
+    mqn2at_negotiator.py
 
 Other Class File:
-    accommodating_negotiator.py
+    decision_tree_negotiator.py
 
 Writeup:
-    writeup.pdf
+    CS4710_HW3_Writeup.pdf
