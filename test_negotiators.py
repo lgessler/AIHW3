@@ -266,7 +266,10 @@ class RandomNegotiator(BaseNegotiator):
 
 
 class RandomWithThresholdNegotiator(BaseNegotiator):
-    threshold = 0.5
+    self.threshold = 0.5
+    self.is_first = False
+    self.iter = 0
+
     def calc_utility(self,offer):
         temp = self.offer
         self.offer = offer
@@ -277,6 +280,23 @@ class RandomWithThresholdNegotiator(BaseNegotiator):
     # Override the make_offer method from BaseNegotiator to accept a given offer 5%
     # of the time, and return a random permutation the rest of the time.   
     def make_offer(self, offer):
+        if offer == None:
+            self.is_first = True
+        else:
+            self.iter += 1
+
+        #if last offer
+        if self.iter == self.iter_limit:
+            self.iter = 0
+            if not self.is_first:
+                self.offer = self.preferences
+                return self.offer
+            
+            #Final accept
+            else:
+                self.offer = offer[:]
+                return offer
+
         if offer != None and float(self.calc_utility(offer)) >= self.threshold * float(self.calc_utility(self.preferences)):
             # Very important - we save the offer we're going to return as self.offer
             self.offer = offer[:]
