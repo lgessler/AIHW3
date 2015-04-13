@@ -13,18 +13,11 @@ from MinLoss_Negotiator import MinLoss_Negotiator
 
 negotiators = [
     NaiveNegotiator(),
-    NaiveNegotiator(),
-    Selfish_Negotiator(),
     Selfish_Negotiator(),
     Mostly_Selfish_Negotiator(),
-    Mostly_Selfish_Negotiator(),
-    LenientNegotiator(),
     LenientNegotiator(),
     CavingNegotiator(),
-    CavingNegotiator(),
     RandomWithThresholdNegotiator(),
-    RandomWithThresholdNegotiator(),
-    AccommodatingNegotiator(),
     AccommodatingNegotiator(),
 ]
 

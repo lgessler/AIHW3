@@ -28,8 +28,8 @@ class AccommodatingNegotiator(BaseNegotiator):
         self.opp_offers = []
 
         #For abuse caving
-        cavingCount = 0
-        caving = False
+        self.caving_count = 0
+        self.caving = False
 
 
     def find_util(self, order):
@@ -181,7 +181,7 @@ class AccommodatingNegotiator(BaseNegotiator):
                 if my_score < opp_score:
                     #If negotiation dragged to last round = made the last offer
                     if results[3] == self.iter_limit:
-                        self.cavingCount = 0
+                        self.caving_count = 0
                         self.caving = False
                         if my_score < 0.8 * opp_score:
                             self.last_offer_thresh = float(my_score) / float(self.max_util) + 0.05
@@ -203,8 +203,8 @@ class AccommodatingNegotiator(BaseNegotiator):
                 elif my_score >= opp_score:
                     #If negotiation dragged to last round = opponent accepted last offer
                     if results[3] == self.iter_limit:
-                        self.cavingCount += 1
-                        if self.cavingCount > 1:
+                        self.caving_count += 1
+                        if self.caving_count > 1:
                             self.caving = True
                         self.last_offer_thresh = float(my_score) / float(self.max_util)
                     #If negotiation aggreed midway and we accepted
@@ -217,7 +217,7 @@ class AccommodatingNegotiator(BaseNegotiator):
         #If negotiation FAILED
         else:
             self.caving = False
-            self.cavingCount = 0
+            self.caving_count = 0
             self.offer_step_size += 1
             if self.last_accept_thresh > 0.0:
                 self.last_accept_thresh -= 0.05
