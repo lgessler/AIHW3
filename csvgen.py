@@ -19,7 +19,7 @@ for i in os.listdir(PATH):
 # write new ones
 words = open('words','r').read().split('\n')
 words = [filter(lambda x: x in string.printable, s).lower() for s in words if "'" not in s]
-words = [choice(words) for i in range(LENGTH)]
+words = [choice(words) for i in range(LENGTH*3)]
 
 for i in range(NUM_CSVS):
     order1 = [str(i) for i in range(1,LENGTH+1)]
