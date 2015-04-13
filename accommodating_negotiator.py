@@ -16,7 +16,7 @@ class AccommodatingNegotiator(BaseNegotiator):
 
         #Four thresholds:
         self.offer_thresh = 0.6
-        self.accept_thresh = 0.5
+        self.accept_thresh = 0.4
         self.last_offer_thresh = 0.3
         self.last_accept_thresh = 0.2
         self.highest_opp_offer = [] #best offer the opponents give that are above last_offer_thresh but below accept_thresh
@@ -26,6 +26,10 @@ class AccommodatingNegotiator(BaseNegotiator):
         self.opp_preference = []
         self.opp_max_util = -1.0
         self.opp_offers = []
+
+        #For abuse caving
+        cavingCount = 0
+        caving = False
 
 
     def find_util(self, order):
@@ -83,7 +87,7 @@ class AccommodatingNegotiator(BaseNegotiator):
             #Give final offer
             if not self.is_first:
                 #If opponent hasn't given reasonable offer, spit back preferences
-                if self.highest_opp_offer == []:
+                if self.highest_opp_offer == [] or self.caving:
                     self.offer = self.sp[0][0]
                     return self.offer
                 #If opponent has given us reasonable offer prior, offer back
@@ -172,6 +176,9 @@ class AccommodatingNegotiator(BaseNegotiator):
                 if my_score < opp_score:
                     #If negotiation dragged to last round = made the last offer
                     if results[3] == self.iter_limit:
+                        self.cavingCount += 1
+                        if self.cavingCount > 2:
+                            self.caving = True
                         if my_score < 0.8 * opp_score:
                             self.last_offer_thresh = float(my_score) / float(self.max_util) + 0.05
                         else:
@@ -202,6 +209,8 @@ class AccommodatingNegotiator(BaseNegotiator):
             
         #If negotiation FAILED
         else:
+            self.caving = False
+            self.cavingCount = 0
             self.offer_step_size += 1
-            #if self.last_accept_thresh > 0.0:
-            #    self.last_accept_thresh -= 0.05
+            if self.last_accept_thresh > 0.0:
+                self.last_accept_thresh -= 0.05
