@@ -6,6 +6,14 @@ FILE MANIFEST
 =============
 
 Provided Files:
-    negotiator_base.py:q
+    negotiator_base.py
+    negotiator_framework.py
+
+Class Files:
+    naive_negotiator.py
+    naive_accommodating_negotiator.py
+    accommodating_negotiator.py
+    test_negotiators.py
+    
 
 
