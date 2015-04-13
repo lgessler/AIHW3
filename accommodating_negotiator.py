@@ -83,9 +83,9 @@ class AccommodatingNegotiator(BaseNegotiator):
                 self.highest_opp_offer_util = opp_util
 
         #If opponent caves and you make last offer, only demand 
-        if self.caving and not self.is_first:
-            self.offer = self.sp[0][0]
-            return self.offer
+        #if self.caving and not self.is_first:
+        #    self.offer = self.sp[0][0]
+        #    return self.offer
 
         #if last offer
         if self.iter == self.iter_limit:
@@ -181,8 +181,8 @@ class AccommodatingNegotiator(BaseNegotiator):
                 if my_score < opp_score:
                     #If negotiation dragged to last round = made the last offer
                     if results[3] == self.iter_limit:
-                        self.caving_count = 0
-                        self.caving = False
+                        #self.caving_count = 0
+                        #self.caving = False
                         if my_score < 0.8 * opp_score:
                             self.last_offer_thresh = float(my_score) / float(self.max_util) + 0.05
                         else:
@@ -203,9 +203,9 @@ class AccommodatingNegotiator(BaseNegotiator):
                 elif my_score >= opp_score:
                     #If negotiation dragged to last round = opponent accepted last offer
                     if results[3] == self.iter_limit:
-                        self.caving_count += 1
-                        if self.caving_count > 1:
-                            self.caving = True
+                        #self.caving_count += 1
+                        #if self.caving_count > 1:
+                        #    self.caving = True
                         self.last_offer_thresh = float(my_score) / float(self.max_util)
                     #If negotiation aggreed midway and we accepted
                     elif self.accepted_midway:
@@ -216,8 +216,8 @@ class AccommodatingNegotiator(BaseNegotiator):
             
         #If negotiation FAILED
         else:
-            self.caving = False
-            self.caving_count = 0
-            self.offer_step_size += 1
+            #self.caving = False
+            #self.caving_count = 0
+            #self.offer_step_size += 1
             if self.last_accept_thresh > 0.0:
                 self.last_accept_thresh -= 0.05
