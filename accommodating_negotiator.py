@@ -62,6 +62,7 @@ class AccommodatingNegotiator(BaseNegotiator):
         self.iter = 0
         self.sp = self.find_possibilities() 
         self.sp = self.sp[::-1]
+        print(self.sp)
         self.max_util = self.sp[0][1]
 
     def make_offer(self, offer):
