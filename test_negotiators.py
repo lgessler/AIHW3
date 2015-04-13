@@ -268,7 +268,7 @@ class RandomNegotiator(BaseNegotiator):
 class RandomWithThresholdNegotiator(BaseNegotiator):
     threshold = 0.5
     is_first = False
-    iter = 0
+    iter_num = 0
 
     def calc_utility(self,offer):
         temp = self.offer
@@ -283,11 +283,11 @@ class RandomWithThresholdNegotiator(BaseNegotiator):
         if offer == None:
             self.is_first = True
         else:
-            self.iter += 1
+            self.iter_num += 1
 
         #if last offer
-        if self.iter == self.iter_limit:
-            self.iter = 0
+        if self.iter_num == self.iter_limit:
+            self.iter_num = 0
             if not self.is_first:
                 self.offer = self.preferences
                 return self.offer
@@ -308,3 +308,7 @@ class RandomWithThresholdNegotiator(BaseNegotiator):
                 shuffle(ordering)
             self.offer = ordering[:]
             return self.offer
+
+    def receive_results(self, results):
+        self.is_first = False
+        self.iter_num = 0
