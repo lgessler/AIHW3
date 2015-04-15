@@ -18,7 +18,7 @@ negotiators = [
     Selfish_Negotiator(),
     NaiveNegotiator(),
     RandomWithThresholdNegotiator(),
-    AccommodatingNegotiator(),
+#    AccommodatingNegotiator(),
 ]
 
 
