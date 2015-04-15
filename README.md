@@ -1,17 +1,17 @@
-HW3 for AI (CS 4710) at UVa, Spring 2015.
-Authors: Minh Nguyen (mqn2at@virginia.edu)
-         Luke Gessler (ldg3fa@virginia.edu)
+# HW3 for AI (CS 4710) at UVa, Spring 2015.
+Authors: 
 
-USAGE
-=====
+*Minh Nguyen (mqn2at@virginia.edu)
+*Luke Gessler (ldg3fa@virginia.edu)
+
+##USAGE
 Enter driver.py and instantiate desired negotiators in the list `negotiators`.
 
 From the shell, execute
 
     $ python3 driver.py {5,7,10,20}
 
-FILE MANIFEST
-=============
+##FILE MANIFEST
 
 Provided Files:
     negotiator_base.py
@@ -38,9 +38,8 @@ Data Files/Directories:
     words
         -A *NIX file we included here.
 
-LICENSE
-=======
-This code is released under a Sam license. You can feel free to use this code for whatever you want, with the following stipulations:
+##LICENSE
+This code is released under a Sam License. You can feel free to use this code for whatever you want, with the following stipulations:
 
 1. This code cannot be used in any product that is sold
 2. You must reference the authors if you use this code
