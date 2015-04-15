@@ -37,3 +37,13 @@ Data Files/Directories:
     test_cases/
     words
         -A *NIX file we included here.
+
+LICENSE
+=======
+This code is released under a Sam license. You can feel free to use this code for whatever you want, with the following stipulations:
+
+1. This code cannot be used in any product that is sold
+2. You must reference the authors if you use this code
+3. Don't use this code to cheat.
+
+Copyright Luke Gessler and Minh Nguyen, 2015
