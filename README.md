@@ -15,7 +15,7 @@ From the shell, execute
 Our bot placed second in a class-wide, round-robin tournament!
 
     csh7kd	1543
-    **mqn2at	1496**
+    mqn2at	1496 <-- us
     sp2cd	1443
     mmk4jq	1121
     mrs3fu	975
