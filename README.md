@@ -10,6 +10,22 @@ Enter driver.py and instantiate desired negotiators in the list `negotiators`.
 From the shell, execute
 
     $ python3 driver.py {5,7,10,20}
+    
+##UPDATE
+Our bot placed second in a class-wide, round-robin tournament!
+
+    csh7kd	1543
+    **mqn2at	1496**
+    sp2cd	1443
+    mmk4jq	1121
+    mrs3fu	975
+    apn4zaV2	975
+    iam6ep	966
+    gjv2wu	921
+    jpm4bd	921
+    zw2rf	912
+    
+The agent we submitted was [this one](https://github.com/lgessler/AIHW3/blob/master/submission/mqn2at_negotiator.py). Go team!
 
 ##FILE MANIFEST
 
